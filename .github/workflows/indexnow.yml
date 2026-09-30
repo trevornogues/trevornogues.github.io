@@ -1,0 +1,30 @@
+# Ping IndexNow after every publish to trevornogues.github.io
+name: IndexNow
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify IndexNow of published URLs
+        env:
+          INDEXNOW_KEY: c405503cf41f635413203fcee78fb209
+        run: |
+          curl -sS -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"host\": \"trevornogues.github.io\",
+              \"key\": \"${INDEXNOW_KEY}\",
+              \"keyLocation\": \"https://trevornogues.github.io/${INDEXNOW_KEY}.txt\",
+              \"urlList\": [
+                \"https://trevornogues.github.io/\",
+                \"https://trevornogues.github.io/about/\",
+                \"https://trevornogues.github.io/contact/\",
+                \"https://trevornogues.github.io/sitemap.xml\"
+              ]
+            }"
+          echo
+          echo "IndexNow ping sent."
